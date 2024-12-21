@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Vulnerability Analysis</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+    </nav>
+
+
+    <header>
+        <h1>Web Vulnerability Analysis Tool</h1>
+        <button id="dark-mode-toggle" aria-label="Toggle dark mode">
+            🌙 Dark Mode
+        </button>
+    </header>
+    <main>
+        <form id="scan-form">
+            <label for="domain">Enter Domain:</label>
+            <input type="text" id="domain" name="domain" placeholder="example.com" required>
+
+            <label for="start-port">Start Port:</label>
+            <input type="number" id="start-port" name="start-port">
+
+            <label for="end-port">End Port:</label>
+            <input type="number" id="end-port" name="end-port">
+
+            <label for="action">Select Action:</label>
+            <select id="action" name="action" required>
+                <option value="ports">Port Scanning</option>
+                <option value="headers">Analyze HTTP Headers</option>
+                <option value="search_scripts">Search Scripts</option>
+            </select>
+
+            <button type="submit">
+            <i class="fas fa-search"></i> Analyze
+            </button>
+
+        </form>
+
+        <div id="result">
+            <h2>Scan Results</h2>
+            <div id="result-content" class="result-box">
+                <!-- Results will appear here dynamically -->
+                <p>No results yet. Start a scan to see the output.</p>
+            </div>
+        </div>
+
+
+
+        <div id="shodan-result">
+            <h2>Shodan Information:</h2>
+            <pre id="shodan-content"></pre>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Web Vulnerability Analysis Tool</p>
+    </footer>
+    <script src="../static/scripts.js"></script>
+
+</body>
+</html>

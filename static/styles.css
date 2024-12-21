@@ -1,0 +1,192 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(120deg, #f4f4f9, #e0e7ff);
+    background-color: #eef2f5;
+    color: #222;
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+}
+
+/* Header */
+header {
+    background-color: #0069d9;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Georgia', serif;
+}
+
+/* Main Section */
+main {
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+main form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+input, select, button {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+button {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #218838;
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Results Section */
+#result {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-left: 4px solid #28a745;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Roboto', sans-serif;
+}
+
+#result h2 {
+    font-size: 1.8rem;
+    color: #0056b3;
+    margin-bottom: 1rem;
+}
+
+.result-box {
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-box p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    background: #007bff;
+    padding: 1rem;
+    color: white;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Navigation */
+nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #0056b3;
+    padding: 1rem;
+    list-style: none;
+    margin: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ffcc00;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background: linear-gradient(120deg, #121212, #2b2b2b);
+    color: #e4e4e4;
+}
+
+body.dark-mode header {
+    background-color: #1a1a1a;
+    color: #f4f4f9;
+}
+
+body.dark-mode main {
+    background: #1e1e1e;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    color: #d1d1d1;
+}
+
+body.dark-mode input,
+body.dark-mode select {
+    background: #333;
+    color: #e4e4e4;
+    border: 1px solid #555;
+}
+
+body.dark-mode button {
+    background-color: #444;
+    color: #e4e4e4;
+}
+
+body.dark-mode button:hover {
+    background-color: #555;
+}
+
+body.dark-mode footer {
+    background: #222;
+    color: #ccc;
+}
+
+body.dark-mode #result {
+    background-color: #1e1e1e;
+    border-color: #444;
+    color: #ccc;
+}
+
+body.dark-mode .result-box {
+    background: #333;
+    border-color: #555;
+    color: #e4e4e4;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    main {
+        padding: 1rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+    }
+}
