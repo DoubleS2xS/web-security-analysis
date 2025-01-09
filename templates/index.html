@@ -10,7 +10,7 @@
 <body>
     <nav>
     <ul>
-        <li><a href="#">Home</a></li>
+        <li><a href="index.html">Home</a></li>
         <li><a href="#">About</a></li>
         <li><a href="#">Contact</a></li>
     </ul>
@@ -24,42 +24,51 @@
         </button>
     </header>
     <main>
-        <form id="scan-form">
-            <label for="domain">Enter Domain:</label>
-            <input type="text" id="domain" name="domain" placeholder="example.com" required>
+        <div class="container">
+            <div class="form-section">
+                <form id="scan-form">
+                    <label for="domain">Enter Domain:</label>
+                    <input type="text" id="domain" name="domain" placeholder="example.com" required>
 
-            <label for="start-port">Start Port:</label>
-            <input type="number" id="start-port" name="start-port">
+                    <label for="start-port">Start Port:</label>
+                    <input type="number" id="start-port" name="start-port">
 
-            <label for="end-port">End Port:</label>
-            <input type="number" id="end-port" name="end-port">
+                    <label for="end-port">End Port:</label>
+                    <input type="number" id="end-port" name="end-port">
 
-            <label for="action">Select Action:</label>
-            <select id="action" name="action" required>
-                <option value="ports">Port Scanning</option>
-                <option value="headers">Analyze HTTP Headers</option>
-                <option value="search_scripts">Search Scripts</option>
-            </select>
+                    <label for="action">Select Action:</label>
+                    <select id="action" name="action" required>
+                        <option value="ports">Port Scanning</option>
+                        <option value="headers">Analyze HTTP Headers</option>
+                        <option value="search_scripts">Search Scripts</option>
+                    </select>
 
-            <button type="submit">
-            <i class="fas fa-search"></i> Analyze
-            </button>
+                    <button type="submit">
+                        <i class="fas fa-search"></i> Analyze
+                    </button>
+                </form>
 
-        </form>
+                <div id="result">
+                    <h2>Scan Results</h2>
+                    <div id="result-content" class="result-box">
+                        <!-- Results will appear here dynamically -->
+                        <p>No results yet. Start a scan to see the output.</p>
+                    </div>
+                </div>
 
-        <div id="result">
-            <h2>Scan Results</h2>
-            <div id="result-content" class="result-box">
-                <!-- Results will appear here dynamically -->
-                <p>No results yet. Start a scan to see the output.</p>
+
+
+                <div id="shodan-result">
+                    <h2>Shodan Information:</h2>
+                    <pre id="shodan-content"></pre>
+                </div>
             </div>
-        </div>
-
-
-
-        <div id="shodan-result">
-            <h2>Shodan Information:</h2>
-            <pre id="shodan-content"></pre>
+            <div class="history-section">
+                <h2>Scan History</h2>
+                <div id="history-content" class="history-box">
+                    <p>Loading history...</p>
+                </div>
+            </div>
         </div>
     </main>
     <footer>
@@ -69,3 +78,4 @@
 
 </body>
 </html>
+
