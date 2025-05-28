@@ -83,6 +83,12 @@ def shodan_lookup(domain):
 @app.route('/')
 def home():
     return render_template('index.html')
+@app.route('/about.html')
+def about():
+    return render_template('about.html')
+@app.route('/contact.html')
+def contact():
+    return render_template('contact.html')
 
 # Сканирование портов
 @app.route('/scan_ports', methods=['POST'])
