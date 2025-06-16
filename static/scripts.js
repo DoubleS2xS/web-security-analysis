@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const darkModeToggle = document.getElementById("dark-mode-toggle");
     const body = document.body;
 
-    // Check for saved mode preference
+    // saved mode preference
     const savedMode = localStorage.getItem("dark-mode");
     if (savedMode === "enabled") {
         body.classList.add("dark-mode");
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const isDarkMode = body.classList.contains("dark-mode");
         darkModeToggle.textContent = isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode";
 
-        // Save preference to localStorage
+
         localStorage.setItem("dark-mode", isDarkMode ? "enabled" : "disabled");
     });
 });
