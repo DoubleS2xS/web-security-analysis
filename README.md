@@ -7,5 +7,8 @@ This website can:
 It also saves scan history.
 Dark mode is also included.
 
-<img width="1279" alt="Снимок экрана 2025-01-10 в 00 30 30" src="https://github.com/user-attachments/assets/91c7ebd3-1cfe-423b-aaf0-a4a0f5e30d79" />
-<img width="1279" alt="Снимок экрана 2025-01-10 в 00 31 19" src="https://github.com/user-attachments/assets/3712a5dc-348f-4da3-a873-bf50b391bc90" />
+<img width="1280" alt="Снимок экрана 2025-05-28 в 23 57 01" src="https://github.com/user-attachments/assets/ae012a45-43e0-4146-a7f1-e63ee1c969a2" />
+<img width="1280" alt="Снимок экрана 2025-05-28 в 23 48 59" src="https://github.com/user-attachments/assets/2e96f1b6-0a2d-4ed5-b57d-7b22ddd5db1d" />
+<img width="652" alt="Снимок экрана 2025-05-29 в 02 10 22" src="https://github.com/user-attachments/assets/00de2174-0564-4777-8dd7-bb463a48d65e" />
+<img width="652" alt="Снимок экрана 2025-05-29 в 02 21 43" src="https://github.com/user-attachments/assets/cf3125c7-19fc-432c-8f56-f36a6e874a57" />
+<img width="170" alt="Снимок экрана 2025-05-29 в 02 25 18" src="https://github.com/user-attachments/assets/7c256023-02a7-4a35-91f2-5dadf3faa45f" />
