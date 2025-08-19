@@ -1,4 +1,4 @@
-Another backup for my dimploma work. In this work I use html/css, javascript, python, sqlalchemy. In python I used Flask framework. 
+In this work I use html/css, javascript, python, sqlalchemy. In python I used Flask framework. 
 This website can: 
 1)Do shodan test
 2)Scan ports.
