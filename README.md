@@ -1,34 +1,203 @@
 # Web Security Analysis
 
-A comprehensive toolkit for analyzing and assessing the security of web applications. This repository provides resources, scripts, and documentation to help developers and security professionals evaluate vulnerabilities and strengthen the security posture of web-based systems.
+Web Security Analysis is a Flask-based web application for security-oriented reconnaissance and reporting. It can scan ports, inspect HTTP headers, look for scripts on a target website, query Shodan for host intelligence, and generate an AI-assisted security summary.
 
 ## Features
 
-- Automated scanning for common web vulnerabilities
-- Scripts for penetration testing and security auditing
-- Guidelines and best practices for securing web applications
-- Integration with popular security tools and frameworks
-- Reporting and visualization of security findings
+- Port scanning for a configurable range
+- HTTP header inspection
+- Script discovery for `.js` and `.cgi` files
+- Shodan host lookup
+- AI-generated security report with Gemini
+- Scan history stored in SQLite
+- Simple HTML pages for the main site, About, and Contact sections
 
-### Prerequisites
+## Tech stack
 
-- [Python](https://www.python.org/) 3.x (if using Python scripts)
-- [Node.js](https://nodejs.org/) (if using JavaScript/TypeScript modules)
-- Access to a test environment or target web application
-
-## ⚙️ Technologies
-
-- HTML5
-- CSS
-- Python
-- Flexbox + Grid
-- JS
-- SQLAlchemy
+- Python 3
 - Flask
+- Flask-SQLAlchemy
+- SQLite
+- requests
+- shodan
+- google-generativeai
 
+## Requirements
 
-<img width="1280" alt="Снимок экрана 2025-05-28 в 23 57 01" src="https://github.com/user-attachments/assets/ae012a45-43e0-4146-a7f1-e63ee1c969a2" />
-<img width="1280" alt="Снимок экрана 2025-05-28 в 23 48 59" src="https://github.com/user-attachments/assets/2e96f1b6-0a2d-4ed5-b57d-7b22ddd5db1d" />
-<img width="652" alt="Снимок экрана 2025-05-29 в 02 10 22" src="https://github.com/user-attachments/assets/00de2174-0564-4777-8dd7-bb463a48d65e" />
-<img width="652" alt="Снимок экрана 2025-05-29 в 02 21 43" src="https://github.com/user-attachments/assets/cf3125c7-19fc-432c-8f56-f36a6e874a57" />
-<img width="170" alt="Снимок экрана 2025-05-29 в 02 25 18" src="https://github.com/user-attachments/assets/7c256023-02a7-4a35-91f2-5dadf3faa45f" />
+- Python 3.10 or newer is recommended
+- Internet access for Shodan, HTTP requests, and Gemini API calls
+- Valid API keys for:
+  - Shodan
+  - Google Gemini
+
+## Installation
+
+1. Clone the repository and move into the project directory.
+
+```bash
+git clone <repo-url>
+cd project-backup
+```
+
+2. Create and activate a virtual environment.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+3. Install dependencies.
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## Configuration
+
+The application currently reads the Shodan and Gemini API keys from `app.py`.
+
+For better security, you should move those keys to environment variables before deploying or sharing the project.
+
+Also make sure the following files and folders are available:
+
+- `templates/`
+- `static/`
+- `instance/` (used for the SQLite database file)
+
+## Run locally
+
+Start the Flask application with:
+
+```bash
+python3 app.py
+```
+
+Then open the app in your browser:
+
+```text
+http://127.0.0.1:5000
+```
+
+The SQLite database file `instance/scan_history.db` is created automatically if it does not already exist.
+
+## Pages
+
+- `/` - Home page
+- `/about.html` - About page
+- `/contact.html` - Contact page
+
+## API endpoints
+
+### `POST /scan_ports`
+Scan a target for open ports.
+
+Request body example:
+
+```json
+{
+  "domain": "example.com",
+  "start_port": 20,
+  "end_port": 100
+}
+```
+
+Response example:
+
+```json
+{
+  "open_ports": [80, 443]
+}
+```
+
+### `POST /analyze`
+Run one of the analysis modes: `shodan`, `headers`, or `search_scripts`.
+
+Request body example:
+
+```json
+{
+  "domain": "example.com",
+  "action": "headers"
+}
+```
+
+Possible actions:
+
+- `shodan` - Return Shodan host data
+- `headers` - Fetch HTTP response headers
+- `search_scripts` - Find `.js` and `.cgi` references on the target page
+
+### `GET /history`
+Return the saved scan history from SQLite.
+
+### `POST /get_ai_report`
+Generate an AI security report from previously collected scan data.
+
+Request body example:
+
+```json
+{
+  "domain": "example.com",
+  "open_ports": [80, 443],
+  "headers": {
+    "Server": "nginx"
+  },
+  "shodan": {
+    "Operating System": "Linux",
+    "Country": "United States",
+    "Open Ports": [80, 443]
+  },
+  "scripts": {
+    "js_scripts": ["/static/scripts.js"]
+  }
+}
+```
+
+## Example usage with curl
+
+Scan ports:
+
+```bash
+curl -X POST http://127.0.0.1:5000/scan_ports \
+  -H "Content-Type: application/json" \
+  -d '{"domain":"example.com","start_port":1,"end_port":100}'
+```
+
+Fetch headers:
+
+```bash
+curl -X POST http://127.0.0.1:5000/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"domain":"example.com","action":"headers"}'
+```
+
+Get scan history:
+
+```bash
+curl http://127.0.0.1:5000/history
+```
+
+## Project structure
+
+```text
+project-backup/
+├── app.py
+├── requirements.txt
+├── README.md
+├── instance/
+├── static/
+└── templates/
+```
+
+## Security note
+
+Use this tool only on systems you own or have explicit permission to test.
+
+Port scanning, header analysis, and Shodan lookups can generate network traffic and should be performed responsibly.
+
+## Notes
+
+- The application uses SQLite for local history storage.
+- The AI report depends on Gemini being available and correctly configured.
+- If an API key is missing or invalid, related features will return an error.

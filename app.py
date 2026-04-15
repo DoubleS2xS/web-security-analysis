@@ -6,10 +6,14 @@ import concurrent.futures
 import re
 import requests
 import shodan
+import google.generativeai as genai
+import os
 
 
 SHODAN_API_KEY = 'pHHlgpFt8Ka3Stb5UlTxcaEwciOeF2QM'
 shodan_client = shodan.Shodan(SHODAN_API_KEY)
+GEMINI_API_KEY = "AIzaSyBD8FRfT3w-IsW5oW7B7G8N8_Pcfw1g_0M"
+genai.configure(api_key=GEMINI_API_KEY)
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
@@ -251,6 +255,48 @@ def history():
     except Exception as e:
         return jsonify({"error": f"Could not retrieve history: {str(e)}"}), 500
 
+
+#AI БЛОК
+def generate_ai_report(scan_data):
+    try:
+        model = genai.GenerativeModel('gemini-2.5-flash')
+
+        domain = scan_data.get('domain', 'Unknown')
+        ports = scan_data.get('open_ports', [])
+        headers = scan_data.get('headers', {})
+        shodan_data = scan_data.get('shodan', {})
+        scripts = scan_data.get('scripts', {})
+
+        # Build the AI prompt
+        prompt = f"""
+        You are a professional cybersecurity expert (pentester).
+        Analyze the scan results for the domain: {domain}.
+
+        TECHNICAL DATA:
+        1. Open ports: {ports}
+        2. HTTP headers: {list(headers.keys())}
+        3. Shodan data: OS: {shodan_data.get('Operating System')}, Country: {shodan_data.get('Country')}, Shodan ports: {shodan_data.get('Open Ports')}
+        4. Website scripts: found {len(scripts.get('js_scripts', []))} JavaScript files.
+
+        YOUR TASK:
+        1. Assess the threat level (Low/Medium/High).
+        2. Explain the risks of open ports (especially dangerous ones like 21, 23, 3389).
+        3. Check for important security headers (X-Frame-Options, CSP). If they are missing from the list, mention that as a weakness.
+        4. Give brief remediation recommendations.
+
+        Respond only in English. Use Markdown for clear formatting.
+        """
+
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        return f"Ошибка при обращении к Gemini AI: {str(e)}"
+
+@app.route('/get_ai_report', methods=['POST'])
+def get_ai_report():
+    data = request.json
+    report = generate_ai_report(data)
+    return jsonify({"report": report})
 
 if __name__ == '__main__':
     app.run(debug=True)
