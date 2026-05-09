@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Vulnerability Analysis</title>
-    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -23,40 +23,47 @@
             🌙 Dark Mode
         </button>
     </header>
+
+    <div class="tabs" style="display: flex; justify-content: center; background: #222; margin: 0; padding: 0;">
+        <button class="tab-btn active" onclick="openTab(event, 'dast-tab')" style="flex:1; padding: 15px; background: #0069d9; color: white; border: none; cursor: pointer; font-size: 1.1rem;">DAST (Network & Web)</button>
+        <button class="tab-btn" onclick="openTab(event, 'sast-tab')" style="flex:1; padding: 15px; background: transparent; color: white; border: none; cursor: pointer; font-size: 1.1rem;">SAST (Code Analysis)</button>
+    </div>
+
     <main>
-        <div class="container">
-            <div class="form-section">
-                <form id="scan-form">
-                    <label for="domain">Enter Domain:</label>
-                    <input type="text" id="domain" name="domain" placeholder="example.com" required>
+        <div id="dast-tab" class="tab-content" style="display: block;">
+            <div class="container">
+                <div class="form-section">
+                    <form id="scan-form">
+                        <label for="domain">Enter Domain:</label>
+                        <input type="text" id="domain" name="domain" placeholder="example.com" required>
 
-                    <label for="start-port">Start Port:</label>
-                    <input type="number" id="start-port" name="start-port">
+                        <label for="start-port">Start Port:</label>
+                        <input type="number" id="start-port" name="start-port">
 
-                    <label for="end-port">End Port:</label>
-                    <input type="number" id="end-port" name="end-port">
+                        <label for="end-port">End Port:</label>
+                        <input type="number" id="end-port" name="end-port">
 
-                    <label for="action">Select Action:</label>
-                    <select id="action" name="action" required>
-                        <option value="ports">Port Scanning</option>
-                        <option value="headers">Analyze HTTP Headers</option>
-                        <option value="search_scripts">Search Scripts</option>
-                    </select>
+                        <label for="action">Select Action:</label>
+                        <select id="action" name="action" required>
+                            <option value="ports">Port Scanning</option>
+                            <option value="headers">Analyze HTTP Headers</option>
+                            <option value="search_scripts">Search Scripts</option>
+                        </select>
 
-                    <button type="submit">
-                        <i class="fas fa-search"></i> Analyze
-                    </button>
-                </form>
+                        <button type="submit">
+                            <i class="fas fa-search"></i> Analyze
+                        </button>
+                    </form>
 
-                <div id="result">
-                    <h2>Scan Results</h2>
-                    <div id="result-content" class="result-box">
-                        <!-- Results will appear here dynamically -->
-                        <p>No results yet. Start a scan to see the output.</p>
+                    <div id="result">
+                        <h2>Scan Results</h2>
+                        <div id="result-content" class="result-box">
+                            <!-- Results will appear here dynamically -->
+                            <p>No results yet. Start a scan to see the output.</p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="ai-section" style="margin-top: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
+                    <div class="ai-section" style="margin-top: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;">
     <h2 style="display: flex; align-items: center; gap: 10px;">
         🤖 Интеллектуальный анализ (AI)
     </h2>
@@ -84,11 +91,55 @@
                 </div>
             </div>
         </div>
+        </div>
+        </div>
+
+        <div id="sast-tab" class="tab-content" style="display: none;">
+            <div class="container" style="flex-direction: column;">
+                <div class="form-section" style="max-width: 100%;">
+                    <h2>Upload Source Code for Analysis (SAST)</h2>
+                    <form id="sast-form" enctype="multipart/form-data">
+                        <label for="github-url">GitHub Repository URL (Public):</label>
+                        <input type="url" id="github-url" name="github_url" placeholder="https://github.com/owner/repo">
+
+                        <p style="text-align: center; font-weight: bold; margin: 10px 0;">OR</p>
+
+                        <label for="zip-file">Upload ZIP Archive:</label>
+                        <input type="file" id="zip-file" name="file" accept=".zip">
+
+                        <button type="submit" style="margin-top: 15px; background-color: #28a745;">
+                            <i class="fas fa-file-code"></i> Analyze Code
+                        </button>
+                    </form>
+
+                    <div id="sast-status" style="margin-top:20px; font-weight: bold; color: #0056b3;"></div>
+                </div>
+
+                <div class="results-section" style="max-width: 100%; margin-top: 2rem;">
+                    <h2>SAST Validation Results (HITL)</h2>
+                    <table id="sast-results-table" style="width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; border: 1px solid #ddd;">
+                        <thead style="background: #0069d9; color: white;">
+                            <tr>
+                                <th style="padding: 10px; border: 1px solid #ddd;">File & Line</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Vulnerability</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Severity</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Confidence</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Status</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sast-results-body">
+                            <tr><td colspan="6" style="padding: 15px; text-align: center;">No results yet. Run a scan.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
     <footer>
         <p>&copy; 2025 Web Vulnerability Analysis Tool</p>
     </footer>
-    <script src="../static/scripts.js"></script>
+    <script src="/static/scripts.js"></script>
 
 </body>
 </html>

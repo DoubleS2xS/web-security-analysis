@@ -1,34 +1,44 @@
 # Web Security Analysis
 
-Web Security Analysis is a Flask-based web application for security-oriented reconnaissance and reporting. It can scan ports, inspect HTTP headers, look for scripts on a target website, query Shodan for host intelligence, and generate an AI-assisted security summary.
+Web Security Analysis is a Flask-based web application for security-oriented reconnaissance and static code analysis. It provides both DAST (Dynamic Application Security Testing) capabilities for network intelligence, and SAST (Static Application Security Testing) features using a multi-agent LLM approach.
 
 ## Features
 
+**DAST (Dynamic Analysis):**
 - Port scanning for a configurable range
 - HTTP header inspection
 - Script discovery for `.js` and `.cgi` files
 - Shodan host lookup
-- AI-generated security report with Gemini
-- Scan history stored in SQLite
-- Simple HTML pages for the main site, About, and Contact sections
+- AI-generated security report based on recon data
+
+**SAST (Static Analysis):**
+- Source code vulnerability scanning (via ZIP upload or GitHub URL)
+- Multi-Agent LLM Architecture:
+  - **Detector Agent:** High-recall agent to flag potential security flaws.
+  - **Validator Agent:** High-precision agent to cross-verify findings against the CWE database and mitigate false positives.
+- **Human-in-the-Loop (HITL):** Vulnerabilities failing strict confidence thresholds are flagged for manual review and can be approved/rejected via the UI.
+
+**General:**
+- Scan history stored in local SQLite database
+- Modern tabbed user interface for SAST / DAST workflows
 
 ## Tech stack
 
-- Python 3
-- Flask
-- Flask-SQLAlchemy
-- SQLite
-- requests
-- shodan
-- google-generativeai
+- **Backend:** Python 3, Flask, SQLAlchemy (SQLite)
+- **Frontend:** Vanilla HTML/CSS/JavaScript
+- **AI Models:** 
+  - OpenRouter/Gemini (DAST reporting)
+  - DeepSeek API (`deepseek-chat`) (SAST multi-agent modules)
+- **Utilities:** requests, shodan, werkzeug
 
 ## Requirements
 
 - Python 3.10 or newer is recommended
-- Internet access for Shodan, HTTP requests, and Gemini API calls
-- Valid API keys for:
-  - Shodan
-  - Google Gemini
+- Internet access for downloading repos, querying Shodan, and LLM APIs
+- Valid API keys:
+  - Shodan API
+  - OpenRouter / Google Gemini API
+  - DeepSeek API
 
 ## Installation
 
@@ -55,15 +65,15 @@ pip install -r requirements.txt
 
 ## Configuration
 
-The application currently reads the Shodan and Gemini API keys from `app.py`.
+The application reads API keys from environment variables. Create a `.env` file (you can copy `.env.example` if available) and configure keys:
 
-For better security, you should move those keys to environment variables before deploying or sharing the project.
+```
+SHODAN_API_KEY=your_shodan_key
+GEMINI_API_KEY=your_gemini_or_openrouter_key
+DEEPSEEK_API_KEY=your_deepseek_key
+```
 
-Also make sure the following files and folders are available:
-
-- `templates/`
-- `static/`
-- `instance/` (used for the SQLite database file)
+Do NOT commit the `.env` file to version control. Make sure the `instance/` folder is writeable for the SQLite database.
 
 ## Run locally
 
@@ -79,125 +89,45 @@ Then open the app in your browser:
 http://127.0.0.1:5000
 ```
 
-The SQLite database file `instance/scan_history.db` is created automatically if it does not already exist.
+## Docker / Containerized run
 
-## Pages
+You can run the application with Docker and docker-compose. Ensure your `.env` is configured, then run:
 
-- `/` - Home page
-- `/about.html` - About page
-- `/contact.html` - Contact page
+```bash
+docker-compose up --build
+```
+
+The web app will be available at `http://localhost:5000`.
 
 ## API endpoints
 
-### `POST /scan_ports`
-Scan a target for open ports.
+### DAST Endpoints
 
-Request body example:
+- `POST /scan_ports`: Scan a target for open ports.
+- `POST /analyze`: Run analysis modes like `shodan`, `headers`, or `search_scripts`.
+- `GET /history`: Return saved DAST scan history.
+- `POST /get_ai_report`: Generate an AI security report from collected data.
 
-```json
-{
-  "domain": "example.com",
-  "start_port": 20,
-  "end_port": 100
-}
-```
+### SAST Endpoints
 
-Response example:
-
-```json
-{
-  "open_ports": [80, 443]
-}
-```
-
-### `POST /analyze`
-Run one of the analysis modes: `shodan`, `headers`, or `search_scripts`.
-
-Request body example:
-
-```json
-{
-  "domain": "example.com",
-  "action": "headers"
-}
-```
-
-Possible actions:
-
-- `shodan` - Return Shodan host data
-- `headers` - Fetch HTTP response headers
-- `search_scripts` - Find `.js` and `.cgi` references on the target page
-
-### `GET /history`
-Return the saved scan history from SQLite.
-
-### `POST /get_ai_report`
-Generate an AI security report from previously collected scan data.
-
-Request body example:
-
-```json
-{
-  "domain": "example.com",
-  "open_ports": [80, 443],
-  "headers": {
-    "Server": "nginx"
-  },
-  "shodan": {
-    "Operating System": "Linux",
-    "Country": "United States",
-    "Open Ports": [80, 443]
-  },
-  "scripts": {
-    "js_scripts": ["/static/scripts.js"]
-  }
-}
-```
-
-## Example usage with curl
-
-Scan ports:
-
-```bash
-curl -X POST http://127.0.0.1:5000/scan_ports \
-  -H "Content-Type: application/json" \
-  -d '{"domain":"example.com","start_port":1,"end_port":100}'
-```
-
-Fetch headers:
-
-```bash
-curl -X POST http://127.0.0.1:5000/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"domain":"example.com","action":"headers"}'
-```
-
-Get scan history:
-
-```bash
-curl http://127.0.0.1:5000/history
-```
+- `POST /scan_code`: Main entry point for static testing. Accepts a `file` (ZIP archive) or `github_url` via `multipart/form-data`.
+- `POST /sast/vulnerability/<int:vuln_id>`: HITL endpoint. Update the status of a specific vulnerability (`Confirmed`, `Rejected`).
 
 ## Project structure
 
 ```text
 project-backup/
-├── app.py
-├── requirements.txt
-├── README.md
-├── instance/
-├── static/
-└── templates/
+├── app.py                # Main Flask application
+├── detector_agent.py     # SAST Sub-agent #1 (Detection)
+├── validator_agent.py    # SAST Sub-agent #2 (Validation)
+├── sast_processor.py     # Code extraction, filtering, and chunking
+├── requirements.txt      # Project dependencies
+├── README.md             # Documentation
+├── instance/             # SQLite databases
+├── static/               # CSS and JS files
+└── templates/            # HTML layouts
 ```
 
 ## Security note
 
-Use this tool only on systems you own or have explicit permission to test.
-
-Port scanning, header analysis, and Shodan lookups can generate network traffic and should be performed responsibly.
-
-## Notes
-
-- The application uses SQLite for local history storage.
-- The AI report depends on Gemini being available and correctly configured.
-- If an API key is missing or invalid, related features will return an error.
+Use this tool only on systems and repositories you own or have explicit permission to test. Port scanning, header analysis, and code pulling can generate alerts on target networks and platforms.

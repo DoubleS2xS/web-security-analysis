@@ -8,29 +8,27 @@ __pycache__/
 .ruff_cache/
 .coverage
 htmlcov/
-
 # Virtual environments
 .venv/
 venv/
 env/
 ENV/
-
 # Flask / local runtime files
-instance/*.db
-instance/*.sqlite3
-instance/*.sqlite
-
+instance/
+!instance/.gitkeep
 # Environment variables and secrets
 .env
 .env.*
 *.env
-
 # IDE / editor files
 .idea/
 .vscode/
 *.swp
 *.swo
-
 # OS files
 .DS_Store
 Thumbs.db
+# Project specific ignores
+paper/
+uploads/
+CLAUDE_CONTEXT_PROMPT.md
