@@ -110,7 +110,7 @@ Return a JSON array of all potential vulnerabilities found. If none, return [].
 
 def analyze_chunk(chunk: dict, model=None) -> dict:
     """
-    Send a single code chunk to Groq API for vulnerability detection.
+    Send a single code chunk to DeepSeek API for vulnerability detection.
 
     Args:
         chunk: Code chunk dictionary from sast_processor.

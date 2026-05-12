@@ -364,7 +364,7 @@ Return a JSON array with exactly {len(vulnerabilities_batch)} validation results
 
 def validate_batch(vulnerabilities: List[dict], model=None) -> List[dict]:
     """
-    Validate a batch of vulnerabilities through Groq API.
+    Validate a batch of vulnerabilities through DeepSeek API.
 
     Args:
         vulnerabilities: List of vulnerability dicts from the Detector.

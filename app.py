@@ -258,7 +258,7 @@ def analyze():
 
     elif action == 'headers':
         domain_for_headers = original_domain
-        if not domain_for_headers.startswith("http://") and not domain_forHeaders.startswith("https://"):
+        if not domain_for_headers.startswith("http://") and not domain_for_headers.startswith("https://"):
             domain_for_headers = "http://" + domain_for_headers  # Default to http
 
         try:
@@ -327,15 +327,14 @@ def history():
 #AI БЛОК
 def generate_ai_report(scan_data):
     """
-    Generate an executive summary and final recommendations using Groq API.
+    Generate an executive summary and final recommendations using DeepSeek API.
     """
     if not scan_data:
         return "<p>No report available.</p>"
 
-    # Use actual API key and configurations for Groq
-    groq_api_key = os.getenv("GROQ_API_KEY")
-    groq_url = "https://api.groq.com/openai/v1/chat/completions"
-    groq_model = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+    deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
+    deepseek_url = "https://api.deepseek.com/chat/completions"
+    deepseek_model = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
 
     # Serialize scan data for the prompt
     scan_json = json.dumps(scan_data, indent=2)
@@ -356,12 +355,12 @@ INSTRUCTIONS:
 
     try:
         headers = {
-            "Authorization": f"Bearer {groq_api_key}",
+            "Authorization": f"Bearer {deepseek_api_key}",
             "Content-Type": "application/json"
         }
 
         payload = {
-            "model": groq_model,
+            "model": deepseek_model,
             "messages": [
                 {"role": "system", "content": "You are a specialized application security reporting agent. Produce clean HTML output only."},
                 {"role": "user", "content": prompt}
@@ -369,7 +368,7 @@ INSTRUCTIONS:
             "temperature": 0.2
         }
 
-        response = requests.post(groq_url, headers=headers, json=payload, timeout=60)
+        response = requests.post(deepseek_url, headers=headers, json=payload, timeout=60)
         response.raise_for_status()
 
         html_report = response.json().get("choices", [{}])[0].get("message", {}).get("content", "").strip()
@@ -386,7 +385,7 @@ INSTRUCTIONS:
         return f"""
         <div class="alert alert-warning">
             <h5>Report Generation Failed</h5>
-            <p>Could not reach the Groq API to generate the executive summary.</p>
+            <p>Could not reach the DeepSeek API to generate the executive summary.</p>
             <p>Error details: {str(e)}</p>
         </div>
         """
